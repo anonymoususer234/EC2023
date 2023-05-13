@@ -59,3 +59,96 @@ def on_submit():
 
     if user_height < 60: #for those less than 5 feet in height, we are adding more protein to their body 
         diet_plan += ", Snack: Protein shake"
+
+        
+    if user_exercise == "Cardio":
+        exercise_plan = "30 minutes of running\n10 minutes of jumping jacks: aim for 6 sets of 30 at least\n5 minutes of burpees"
+    elif user_exercise == "Strength":
+        exercise_plan = "Workout for 1 hour: 3 sets of 10 benchpresses\n3 sets of 10 squats\n3 sets of deadlifts (you can incresae difficulty)"
+    elif user_exercise == "Yoga":
+        exercise_plan = "30 minutes of yoga, holding one nostril at a time and breathing through the other slowly\nFinally, 10 minutes of stretching"
+    else:
+        exercise_plan = "No exercise plan available for this selection"
+
+
+    workaround_plan = "" #depending on allergies there is a workaround plan to prevent any contamination 
+    if dairy_var.get() == 1:
+        workaround_plan += "Avoid dairy products. "
+    if gluten_var.get() == 1:
+        workaround_plan += "Avoid gluten-containing products. "
+    if peanut_var.get() == 1:
+        workaround_plan += "Avoid peanuts and peanut butter. "
+    if seafood_var.get() == 1:
+        workaround_plan += "Avoid seafood. "
+    if len(workaround_plan) == 0:
+        workaround_plan = "No workaround plan required."
+
+
+    output_label.configure( #display widget
+        text=f"Based on your input, here is your customized health advice plan:\n\nDiet plan: {diet_plan}\n\nExercise plan: {exercise_plan}\n\nWorkaround plan: {workaround_plan}"
+    )
+
+    
+ #setting all the colors, labels and frames and then packing it using y coordinates 
+frame_bg = "white"
+scrollable_frame.configure(style="My.TFrame")
+window.configure(bg="lightgray")
+age_frame = tk.Frame(window, bg=frame_bg)
+age_frame.pack(pady=10)
+age_label = tk.Label(age_frame, text="What is your age?", font=("Arial", 12), bg=frame_bg)
+age_label.pack(side=tk.LEFT, padx=10)
+age_entry = tk.Entry(age_frame, width=50, font=("Arial", 12))
+age_entry.pack(side=tk.LEFT)
+height_frame = tk.Frame(window, bg=frame_bg)
+height_frame.pack(pady=10)
+height_label = tk.Label(height_frame, text="What is your height in in?", font=("Arial", 12), bg=frame_bg)
+height_label.pack(side=tk.LEFT, padx=10)
+height_entry = tk.Entry(height_frame, width=50, font=("Arial", 12))
+height_entry.pack(side=tk.LEFT)
+weight_frame = tk.Frame(window, bg=frame_bg)
+weight_frame.pack(pady=10)
+weight_label = tk.Label(weight_frame, text="What is your weight in lbs?", font=("Arial", 12), bg=frame_bg)
+weight_label.pack(side=tk.LEFT, padx=10)
+weight_entry = tk.Entry(weight_frame, width=50, font=("Arial", 12))
+weight_entry.pack(side=tk.LEFT)
+diet_frame = tk.Frame(window, bg=frame_bg) #diet menu
+diet_frame.pack(pady=10)
+
+
+
+diet_var = tk.StringVar(window)  # Add this line to define diet_var
+diet_label = tk.Label(diet_frame, text="What is your diet preference?", font=("Arial", 12), bg=frame_bg)
+diet_label.pack(side=tk.LEFT, padx=10)
+diet_options = ["Vegan", "Vegetarian", "Non-veg"]  # Define the diet options list
+diet_dropdown = tk.OptionMenu(diet_frame, diet_var, *diet_options)
+diet_dropdown.config(width=20, font=("Arial", 12))
+diet_dropdown.pack(side=tk.LEFT)
+exercise_frame = tk.Frame(window, bg=frame_bg) #exercise button
+exercise_frame.pack(pady=10)
+exercise_label = tk.Label(exercise_frame, text="What is your exercise preference?", font=("Arial", 12), bg=frame_bg)
+exercise_label.pack(side=tk.LEFT, padx=10)
+exercise_var = tk.StringVar(window, value="Cardio")  # Add this line to define exercise_var
+
+cardio_radio = tk.Radiobutton(exercise_frame, text="Cardio", variable=exercise_var, value="Cardio", font=("Arial", 12), bg=frame_bg)
+cardio_radio.pack(side=tk.LEFT)
+strength_radio = tk.Radiobutton(exercise_frame, text="Strength Training", variable=exercise_var, value="Strength", font=("Arial", 12), bg=frame_bg)
+strength_radio.pack(side=tk.LEFT)
+yoga_radio = tk.Radiobutton(exercise_frame, text="Yoga", variable=exercise_var, value="Yoga", font=("Arial", 12), bg=frame_bg)
+yoga_radio.pack(side=tk.LEFT)
+no_exercise_radio = tk.Radiobutton(exercise_frame, text="No exercise", variable=exercise_var, value="None", font=("Arial", 12), bg=frame_bg)
+no_exercise_radio.pack(side=tk.LEFT)
+
+
+workaround_frame = tk.Frame(window, bg=frame_bg) # this is the area where there is a workaround 
+workaround_frame.pack(pady=10)
+workaround_label = tk.Label(workaround_frame, text="Do you have any allergies or dietary restrictions?", font=("Arial", 12), bg=frame_bg)
+workaround_label.pack(side=tk.LEFT, padx=10)
+dairy_var = tk.IntVar(window)  # Add this line to define dairy_var
+dairy_check = tk.Checkbutton(workaround_frame, text="Dairy", variable=dairy_var, font=("Arial", 12), bg=frame_bg)
+dairy_check.pack(side=tk.LEFT)
+gluten_var = tk.IntVar(window)  # Add this line to define gluten_var
+gluten_check = tk.Checkbutton(workaround_frame, text="Gluten", variable=gluten_var, font=("Arial", 12), bg=frame_bg)
+gluten_check.pack(side=tk.LEFT)
+peanut_var = tk.IntVar(window)  # Add this line to define peanut_var
+peanut_check = tk.Checkbutton(workaround_frame, text="Peanuts", variable=peanut_var, font=("Arial", 12), bg=frame_bg)
+peanut_check.pack(side=tk.LEFT)
