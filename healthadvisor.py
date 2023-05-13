@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import Scrollbar
 import random
 
-window = tk.Tk() #creates the window for the tkinter window 
+window = tk.Tk() #creates the window for the tkinter window
 window.geometry("800x800")
 window.title("Health Advisor App")
 
@@ -11,7 +11,7 @@ canvas = tk.Canvas(window)
 scrollbar = ttk.Scrollbar(window, orient="vertical", command=canvas.yview)
 scrollable_frame = ttk.Frame(canvas)
 
-scrollable_frame.bind( #configure the scroll wheel using lambda and canvas 
+scrollable_frame.bind( #configure the scroll wheel using lambda and canvas
     "<Configure>",
     lambda e: canvas.configure(
         scrollregion=canvas.bbox("all")
@@ -32,16 +32,16 @@ def on_submit():
     user_weight = weight_entry.get()
     user_diet = diet_var.get()
     user_exercise = exercise_var.get()
-    
+   
     if not user_age or not user_height or not user_weight or not user_diet: #checks if the field is empty
         error_message = "Please fill in all the required fields."
         output_label.configure(text=error_message)
         return
 
-    user_age = int(user_age) # casting everything to an int so that mathematical analysis can be completed on it 
+    user_age = int(user_age) # casting everything to an int so that mathematical analysis can be completed on it
     user_height = int(user_height)
     user_weight = int(user_weight)
-    
+   
     if user_age < 20:
         if user_diet == "Vegan":
             diet_plan = "Breakfast: Cereal with almond milk or a smoothie bowl made from fresh fruit\nLunch: Rice with vegan cheese curry or quinoa salad\nDinner: Vegan burger with sweet potato fries\nDessert: Dairy free chocolate, mixed berries and non-dairy ice cream"
@@ -57,10 +57,10 @@ def on_submit():
         else:
             diet_plan = "Breakfast: Scrambled eggs with whole wheat toast and bacon\nLunch: Grilled chicken sandwich and beef jerky\nDinner: Fish curry and steamed vegetables\nDessert: Mixed fruit sorbet"
 
-    if user_height < 60: #for those less than 5 feet in height, we are adding more protein to their body 
+    if user_height < 60: #for those less than 5 feet in height, we are adding more protein to their body
         diet_plan += ", Snack: Protein shake"
 
-        
+       
     if user_exercise == "Cardio":
         exercise_plan = "30 minutes of running\n10 minutes of jumping jacks: aim for 6 sets of 30 at least\n5 minutes of burpees"
     elif user_exercise == "Strength":
@@ -71,7 +71,7 @@ def on_submit():
         exercise_plan = "No exercise plan available for this selection"
 
 
-    workaround_plan = "" #depending on allergies there is a workaround plan to prevent any contamination 
+    workaround_plan = "" #depending on allergies there is a workaround plan to prevent any contamination
     if dairy_var.get() == 1:
         workaround_plan += "Avoid dairy products. "
     if gluten_var.get() == 1:
@@ -88,8 +88,8 @@ def on_submit():
         text=f"Based on your input, here is your customized health advice plan:\n\nDiet plan: {diet_plan}\n\nExercise plan: {exercise_plan}\n\nWorkaround plan: {workaround_plan}"
     )
 
-    
- #setting all the colors, labels and frames and then packing it using y coordinates 
+   
+ #setting all the colors, labels and frames and then packing it using y coordinates
 frame_bg = "white"
 scrollable_frame.configure(style="My.TFrame")
 window.configure(bg="lightgray")
@@ -139,7 +139,7 @@ no_exercise_radio = tk.Radiobutton(exercise_frame, text="No exercise", variable=
 no_exercise_radio.pack(side=tk.LEFT)
 
 
-workaround_frame = tk.Frame(window, bg=frame_bg) # this is the area where there is a workaround 
+workaround_frame = tk.Frame(window, bg=frame_bg) # this is the area where there is a workaround
 workaround_frame.pack(pady=10)
 workaround_label = tk.Label(workaround_frame, text="Do you have any allergies or dietary restrictions?", font=("Arial", 12), bg=frame_bg)
 workaround_label.pack(side=tk.LEFT, padx=10)
@@ -152,3 +152,38 @@ gluten_check.pack(side=tk.LEFT)
 peanut_var = tk.IntVar(window)  # Add this line to define peanut_var
 peanut_check = tk.Checkbutton(workaround_frame, text="Peanuts", variable=peanut_var, font=("Arial", 12), bg=frame_bg)
 peanut_check.pack(side=tk.LEFT)
+
+
+
+seafood_var = tk.IntVar(window)  #adding this line to define seafood_var
+seafood_check = tk.Checkbutton(workaround_frame, text="Seafood", variable=seafood_var, font=("Arial", 12), bg=frame_bg)
+seafood_check.pack(side=tk.LEFT)
+
+submit_button = tk.Button(scrollable_frame, text="Submit", command=on_submit, font=("Arial", 12)) #creates the submit button
+submit_button.grid(row=0, column=0, padx=10, pady=10)
+
+
+output_label = tk.Label(scrollable_frame, font=("Arial", 12)) #creates the output label
+output_label.grid(row=1, column=0, padx=10, pady=10)
+output_label.configure(background=frame_bg)
+meal_plan_label = tk.Label(window, text="Personalized Meal Planning", font=("Arial", 14), bg=frame_bg) #creates the personalized meal planning section laebl and packs it
+meal_plan_label.pack(pady=10)
+
+
+calories_frame = tk.Frame(window, bg=frame_bg) #creates the frame for the user to enter their caloric intake goal
+calories_frame.pack(pady=10)
+calories_label = tk.Label(calories_frame, text="Enter your daily calorie target:", font=("Arial", 12), bg=frame_bg)
+calories_label.pack(side=tk.LEFT, padx=10)
+calories_entry = tk.Entry(calories_frame, width=50, font=("Arial", 12))
+calories_entry.pack(side=tk.LEFT)
+
+ingredients_frame = tk.Frame(window, bg=frame_bg) #creates the entry box for the user to type their desired ingrediaents
+ingredients_frame.pack(pady=10)
+ingredients_label = tk.Label(ingredients_frame, text="Enter ingredients you have (comma-separated):", font=("Arial", 12), bg=frame_bg)
+ingredients_label.pack(side=tk.LEFT, padx=10)
+ingredients_entry = tk.Entry(ingredients_frame, width=50, font=("Arial", 12))
+ingredients_entry.pack(side=tk.LEFT)
+
+generate_button = tk.Button(window) #generates meal plan
+
+window.mainloop()
