@@ -221,4 +221,52 @@ exercise_label = tk.Label(exercise_frame, text="What is your exercise preference
 exercise_label.pack(side=tk.LEFT, padx=10)
 exercise_var = tk.StringVar(window, value="Cardio")  # Add this line to define exercise_var
 
+
+
+#the cardio radio button is created, taking in the exercise_frame, text, exercise type, and font as the parameters. 
+cardio_radio = tk.Radiobutton(exercise_frame, text="Cardio", variable=exercise_var, value="Cardio", font=("Arial", 12), bg=frame_bg)
+cardio_radio.pack(side=tk.LEFT)
+
+#Same as the cardio_radio variable, however this is specifically for the strength_radio variable 
+strength_radio = tk.Radiobutton(exercise_frame, text="Strength Training", variable=exercise_var, value="Strength", font=("Arial", 12), bg=frame_bg)
+strength_radio.pack(side=tk.LEFT)
+
+#same as above
+yoga_radio = tk.Radiobutton(exercise_frame, text="Yoga", variable=exercise_var, value="Yoga", font=("Arial", 12), bg=frame_bg)
+yoga_radio.pack(side=tk.LEFT)
+
+#same as above
+no_exercise_radio = tk.Radiobutton(exercise_frame, text="No exercise", variable=exercise_var, value="None", font=("Arial", 12), bg=frame_bg)
+no_exercise_radio.pack(side=tk.LEFT)
+
+
+workaround_frame = tk.Frame(window, bg=frame_bg) #workaround checkboxes
+workaround_frame.pack(pady=10)
+workaround_label = tk.Label(workaround_frame, text="Do you have any allergies or dietary restrictions?", font=("Arial", 12), bg=frame_bg)
+workaround_label.pack(side=tk.LEFT, padx=10)
+
+dairy_var = tk.IntVar(window)  #add this line to define dairy_var
+dairy_check = tk.Checkbutton(workaround_frame, text="Dairy", variable=dairy_var, font=("Arial", 12), bg=frame_bg)
+dairy_check.pack(side=tk.LEFT)
+
+gluten_var = tk.IntVar(window)  #add this line to define gluten_var
+gluten_check = tk.Checkbutton(workaround_frame, text="Gluten", variable=gluten_var, font=("Arial", 12), bg=frame_bg)
+gluten_check.pack(side=tk.LEFT)
+
+peanut_var = tk.IntVar(window)  #add this line to define peanut_var
+peanut_check = tk.Checkbutton(workaround_frame, text="Peanuts", variable=peanut_var, font=("Arial", 12), bg=frame_bg)
+peanut_check.pack(side=tk.LEFT)
+
+seafood_var = tk.IntVar(window)  #add this line to define seafood_var
+seafood_check = tk.Checkbutton(workaround_frame, text="Seafood", variable=seafood_var, font=("Arial", 12), bg=frame_bg)
+seafood_check.pack(side=tk.LEFT)
+
+
+
+output_label = tk.Label(scrollable_frame, font=("Arial", 12)) #output label set in the scrollable frame with a font
+output_label.grid(row=1, column=0, padx=10, pady=10)
+output_label.configure(background=frame_bg)
+
+
+
 window.mainloop()
