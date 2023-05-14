@@ -1,47 +1,89 @@
+#import the tkiner module and all the sub-modules that are part of it 
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Scrollbar
 import random
 
-window = tk.Tk() #creates the window for the tkinter window
-window.geometry("800x800")
-window.title("Health Advisor App")
 
-canvas = tk.Canvas(window)
-scrollbar = ttk.Scrollbar(window, orient="vertical", command=canvas.yview)
-scrollable_frame = ttk.Frame(canvas)
+#user discussion with the chatbot 
+questions = [
+    "what are some healthy breakfast options?",
+    "what are the benefits of regular exercise?",
+    "how can I lose weight effectively?",
+    "what are some high-protein vegetarian meals?",
+    "what are the best ways to reduce stress?"
+]
+answers = [
+    "Some healthy breakfast options include cereal with fat free milk, avacado toast, or a greek yogurt and fruits.",
+    "Regular exercise has numerous benefits, including improved stamina, fat loss and muscle gain, cardiovascular health, and overall lifespan.",
+    "To lose weight effectively, it's important to combine a balanced diet with regular physical activity. Make sure to burn more calories than you consume and whatever you consume has to be rich in nutrients",
+    "High-protein vegetarian meals can include options like tofu, lentils, garbanzo beans, and soy meat (vegetarian)",
+    "To reduce stress, you can try practicing mindfulness techniques, such as meditation, yoga, engaging in mindfulness seminars and maintaing a calm and cool lifestyle."
+]
 
-scrollable_frame.bind( #configure the scroll wheel using lambda and canvas
-    "<Configure>",
-    lambda e: canvas.configure(
-        scrollregion=canvas.bbox("all")
-    )
-)
+chatbot_window = None
+chatbot_button_added = False  #flag to track if chatbot button is added
 
-canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-canvas.configure(yscrollcommand=scrollbar.set)
-canvas.pack(side="left", fill="both", expand=True)
-scrollbar.pack(side="right", fill="y")
-style = ttk.Style()
-style.configure("My.TFrame", background="white")
+def switch_to_main(): #this function would switch the display from the chatbot window to the main by destroying the chatbot window
+    global chatbot_window
+    chatbot_window.destroy()
+    window.deiconify() #de-iconify the main window in order to make sure that it stays 
+
+def switch_to_chatbot():
+    window.withdraw()
+
+    #This code creates a new window for the chatbot page
+    #It also sets the window dimensions and title
+    global chatbot_window
+    chatbot_window = tk.Toplevel(window)
+    chatbot_window.geometry("800x600")
+    chatbot_window.title("Healthbot")
+
+    #this function creates a button in the chatbot window that lets the user switch back to the main page
+    back_button = tk.Button(chatbot_window, text="Back", command=switch_to_main)
+    back_button.pack()
+
+    #this function creates a text entry box in the chatbot window where the user can enter their question
+    question_entry = tk.Entry(chatbot_window, width=50, font=("Arial", 12))
+    question_entry.pack(pady=10)
+
+    def get_answer():
+        question = question_entry.get().lower()
+        if question:
+        #if the question is in our list of known questions, we retrieve the corresponding answer
+            if question in questions:
+                index = questions.index(question)
+                answer = answers[index]
+            else:
+            #if the question is not in our list, we display a default answer
+                answer = "I'm sorry, I don't have an answer for that question."
+
+            answer_label = tk.Label(chatbot_window, text=answer, font=("Arial", 12), wraplength=700, justify=tk.LEFT)
+            answer_label.pack(pady=10)
+
+
+            question_entry.delete(0, tk.END) #deleting the entries 
+
+    
+    get_answer_button = tk.Button(chatbot_window, text="Get Answer", command=get_answer, font=("Arial", 12)) #create a button to get the answer
+    get_answer_button.pack() #pack the button 
 
 
 def on_submit():
-    user_age = age_entry.get() #fetches all the variables inputted by the user (using .get())
+    user_age = age_entry.get() #fetching all the user inputted information
     user_height = height_entry.get()
     user_weight = weight_entry.get()
     user_diet = diet_var.get()
     user_exercise = exercise_var.get()
-   
-    if not user_age or not user_height or not user_weight or not user_diet: #checks if the field is empty
+
+    if not user_age or not user_height or not user_weight or not user_diet: #checking for empty fields 
         error_message = "Please fill in all the required fields."
         output_label.configure(text=error_message)
         return
 
-    user_age = int(user_age) # casting everything to an int so that mathematical analysis can be completed on it
+    user_age = int(user_age) #casting so that mathematical operations can be completed on it 
     user_height = int(user_height)
     user_weight = int(user_weight)
-   
     if user_age < 20:
         if user_diet == "Vegan":
             diet_plan = "Breakfast: Cereal with almond milk or a smoothie bowl made from fresh fruit\nLunch: Rice with vegan cheese curry or quinoa salad\nDinner: Vegan burger with sweet potato fries\nDessert: Dairy free chocolate, mixed berries and non-dairy ice cream"
@@ -57,11 +99,11 @@ def on_submit():
         else:
             diet_plan = "Breakfast: Scrambled eggs with whole wheat toast and bacon\nLunch: Grilled chicken sandwich and beef jerky\nDinner: Fish curry and steamed vegetables\nDessert: Mixed fruit sorbet"
 
-    if user_height < 60: #for those less than 5 feet in height, we are adding more protein to their body
+    if user_height < 60:
         diet_plan += ", Snack: Protein shake"
 
-       
-    if user_exercise == "Cardio":
+
+    if user_exercise == "Cardio": #generates exercise plans for the user based on the exercise type they chose 
         exercise_plan = "30 minutes of running\n10 minutes of jumping jacks: aim for 6 sets of 30 at least\n5 minutes of burpees"
     elif user_exercise == "Strength":
         exercise_plan = "Workout for 1 hour: 3 sets of 10 benchpresses\n3 sets of 10 squats\n3 sets of deadlifts (you can incresae difficulty)"
@@ -70,8 +112,19 @@ def on_submit():
     else:
         exercise_plan = "No exercise plan available for this selection"
 
+    workaround_plan = "" #workaround plans based on the user's allergies 
+    if dairy_var.get() == 1:
+        workaround_plan += "Avoid dairy products. "
+    if gluten_var.get() == 1:
+        workaround_plan += "Avoid gluten-containing products. "
+    if peanut_var.get() == 1:
+        workaround_plan += "Avoid peanuts and peanut butter. "
+    if seafood_var.get() == 1:
+        workaround_plan += "Avoid seafood. "
+    if len(workaround_plan) == 0:
+        workaround_plan = "No workaround plan required."
 
-    workaround_plan = "" #depending on allergies there is a workaround plan to prevent any contamination
+    workaround_plan = ""
     if dairy_var.get() == 1:
         workaround_plan += "Avoid dairy products. "
     if gluten_var.get() == 1:
@@ -84,106 +137,21 @@ def on_submit():
         workaround_plan = "No workaround plan required."
 
 
-    output_label.configure( #display widget
+    output_label.configure( #configure and display the output widget 
         text=f"Based on your input, here is your customized health advice plan:\n\nDiet plan: {diet_plan}\n\nExercise plan: {exercise_plan}\n\nWorkaround plan: {workaround_plan}"
     )
 
-   
- #setting all the colors, labels and frames and then packing it using y coordinates
-frame_bg = "white"
-scrollable_frame.configure(style="My.TFrame")
-window.configure(bg="lightgray")
-age_frame = tk.Frame(window, bg=frame_bg)
-age_frame.pack(pady=10)
-age_label = tk.Label(age_frame, text="What is your age?", font=("Arial", 12), bg=frame_bg)
-age_label.pack(side=tk.LEFT, padx=10)
-age_entry = tk.Entry(age_frame, width=50, font=("Arial", 12))
-age_entry.pack(side=tk.LEFT)
-height_frame = tk.Frame(window, bg=frame_bg)
-height_frame.pack(pady=10)
-height_label = tk.Label(height_frame, text="What is your height in in?", font=("Arial", 12), bg=frame_bg)
-height_label.pack(side=tk.LEFT, padx=10)
-height_entry = tk.Entry(height_frame, width=50, font=("Arial", 12))
-height_entry.pack(side=tk.LEFT)
-weight_frame = tk.Frame(window, bg=frame_bg)
-weight_frame.pack(pady=10)
-weight_label = tk.Label(weight_frame, text="What is your weight in lbs?", font=("Arial", 12), bg=frame_bg)
-weight_label.pack(side=tk.LEFT, padx=10)
-weight_entry = tk.Entry(weight_frame, width=50, font=("Arial", 12))
-weight_entry.pack(side=tk.LEFT)
-diet_frame = tk.Frame(window, bg=frame_bg) #diet menu
-diet_frame.pack(pady=10)
+
+    global chatbot_button_added #once the user clicks submit, the chatbot button should appear by adding and packing the button right underneath the submit button
+    if not chatbot_button_added:
+        chatbot_button = tk.Button(window, text="Chatbot", command=switch_to_chatbot, font=("Arial", 12))
+        chatbot_button.pack(pady=10)
+        chatbot_button_added = True
+
+    
+    
 
 
-
-diet_var = tk.StringVar(window)  # Add this line to define diet_var
-diet_label = tk.Label(diet_frame, text="What is your diet preference?", font=("Arial", 12), bg=frame_bg)
-diet_label.pack(side=tk.LEFT, padx=10)
-diet_options = ["Vegan", "Vegetarian", "Non-veg"]  # Define the diet options list
-diet_dropdown = tk.OptionMenu(diet_frame, diet_var, *diet_options)
-diet_dropdown.config(width=20, font=("Arial", 12))
-diet_dropdown.pack(side=tk.LEFT)
-exercise_frame = tk.Frame(window, bg=frame_bg) #exercise button
-exercise_frame.pack(pady=10)
-exercise_label = tk.Label(exercise_frame, text="What is your exercise preference?", font=("Arial", 12), bg=frame_bg)
-exercise_label.pack(side=tk.LEFT, padx=10)
-exercise_var = tk.StringVar(window, value="Cardio")  # Add this line to define exercise_var
-
-cardio_radio = tk.Radiobutton(exercise_frame, text="Cardio", variable=exercise_var, value="Cardio", font=("Arial", 12), bg=frame_bg)
-cardio_radio.pack(side=tk.LEFT)
-strength_radio = tk.Radiobutton(exercise_frame, text="Strength Training", variable=exercise_var, value="Strength", font=("Arial", 12), bg=frame_bg)
-strength_radio.pack(side=tk.LEFT)
-yoga_radio = tk.Radiobutton(exercise_frame, text="Yoga", variable=exercise_var, value="Yoga", font=("Arial", 12), bg=frame_bg)
-yoga_radio.pack(side=tk.LEFT)
-no_exercise_radio = tk.Radiobutton(exercise_frame, text="No exercise", variable=exercise_var, value="None", font=("Arial", 12), bg=frame_bg)
-no_exercise_radio.pack(side=tk.LEFT)
-
-
-workaround_frame = tk.Frame(window, bg=frame_bg) # this is the area where there is a workaround
-workaround_frame.pack(pady=10)
-workaround_label = tk.Label(workaround_frame, text="Do you have any allergies or dietary restrictions?", font=("Arial", 12), bg=frame_bg)
-workaround_label.pack(side=tk.LEFT, padx=10)
-dairy_var = tk.IntVar(window)  # Add this line to define dairy_var
-dairy_check = tk.Checkbutton(workaround_frame, text="Dairy", variable=dairy_var, font=("Arial", 12), bg=frame_bg)
-dairy_check.pack(side=tk.LEFT)
-gluten_var = tk.IntVar(window)  # Add this line to define gluten_var
-gluten_check = tk.Checkbutton(workaround_frame, text="Gluten", variable=gluten_var, font=("Arial", 12), bg=frame_bg)
-gluten_check.pack(side=tk.LEFT)
-peanut_var = tk.IntVar(window)  # Add this line to define peanut_var
-peanut_check = tk.Checkbutton(workaround_frame, text="Peanuts", variable=peanut_var, font=("Arial", 12), bg=frame_bg)
-peanut_check.pack(side=tk.LEFT)
-
-
-
-seafood_var = tk.IntVar(window)  #adding this line to define seafood_var
-seafood_check = tk.Checkbutton(workaround_frame, text="Seafood", variable=seafood_var, font=("Arial", 12), bg=frame_bg)
-seafood_check.pack(side=tk.LEFT)
-
-submit_button = tk.Button(scrollable_frame, text="Submit", command=on_submit, font=("Arial", 12)) #creates the submit button
-submit_button.grid(row=0, column=0, padx=10, pady=10)
-
-
-output_label = tk.Label(scrollable_frame, font=("Arial", 12)) #creates the output label
-output_label.grid(row=1, column=0, padx=10, pady=10)
-output_label.configure(background=frame_bg)
-meal_plan_label = tk.Label(window, text="Personalized Meal Planning", font=("Arial", 14), bg=frame_bg) #creates the personalized meal planning section laebl and packs it
-meal_plan_label.pack(pady=10)
-
-
-calories_frame = tk.Frame(window, bg=frame_bg) #creates the frame for the user to enter their caloric intake goal
-calories_frame.pack(pady=10)
-calories_label = tk.Label(calories_frame, text="Enter your daily calorie target:", font=("Arial", 12), bg=frame_bg)
-calories_label.pack(side=tk.LEFT, padx=10)
-calories_entry = tk.Entry(calories_frame, width=50, font=("Arial", 12))
-calories_entry.pack(side=tk.LEFT)
-
-ingredients_frame = tk.Frame(window, bg=frame_bg) #creates the entry box for the user to type their desired ingrediaents
-ingredients_frame.pack(pady=10)
-ingredients_label = tk.Label(ingredients_frame, text="Enter ingredients you have (comma-separated):", font=("Arial", 12), bg=frame_bg)
-ingredients_label.pack(side=tk.LEFT, padx=10)
-ingredients_entry = tk.Entry(ingredients_frame, width=50, font=("Arial", 12))
-ingredients_entry.pack(side=tk.LEFT)
-
-generate_button = tk.Button(window) #generates meal plan
-
-window.mainloop()
+window = tk.Tk() #The main window is created, and its dimensions and title are set. 
+window.geometry("800x800")
+window.title("Health Advisor App")
