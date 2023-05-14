@@ -180,3 +180,45 @@ style.configure("My.TFrame", background="white")
 frame_bg = "white" #set the color to white 
 scrollable_frame.configure(style="My.TFrame")
 window.configure(bg="lightgray") #configure the background to light gray 
+
+#Here we create all the user input entry widgets 
+age_frame = tk.Frame(window, bg=frame_bg)
+age_frame.pack(pady=10)
+age_label = tk.Label(age_frame, text="What is your age?", font=("Arial", 12), bg=frame_bg) #the age laebsl and entry box 
+age_label.pack(side=tk.LEFT, padx=10)
+age_entry = tk.Entry(age_frame, width=50, font=("Arial", 12))
+age_entry.pack(side=tk.LEFT)
+
+height_frame = tk.Frame(window, bg=frame_bg) #the height input entry location setting and entry box
+height_frame.pack(pady=10)
+height_label = tk.Label(height_frame, text="What is your height in inches?", font=("Arial", 12), bg=frame_bg)
+height_label.pack(side=tk.LEFT, padx=10)
+height_entry = tk.Entry(height_frame, width=50, font=("Arial", 12))
+height_entry.pack(side=tk.LEFT)
+
+weight_frame = tk.Frame(window, bg=frame_bg) #setting the weight frame, label and entry box and packing it 
+weight_frame.pack(pady=10)
+weight_label = tk.Label(weight_frame, text="What is your weight in lbs?", font=("Arial", 12), bg=frame_bg)
+weight_label.pack(side=tk.LEFT, padx=10)
+weight_entry = tk.Entry(weight_frame, width=50, font=("Arial", 12))
+weight_entry.pack(side=tk.LEFT)
+
+
+diet_frame = tk.Frame(window, bg=frame_bg) #setting up the frame for the dropdown menu options for diet preference type 
+diet_frame.pack(pady=10) 
+diet_var = tk.StringVar(window)  #adding his line to define diet_var
+diet_label = tk.Label(diet_frame, text="What is your diet preference?", font=("Arial", 12), bg=frame_bg)
+diet_label.pack(side=tk.LEFT, padx=10)
+diet_options = ["Vegan", "Vegetarian", "Non-veg"]  #defining the diet options list
+diet_dropdown = tk.OptionMenu(diet_frame, diet_var, *diet_options)
+diet_dropdown.config(width=20, font=("Arial", 12))
+diet_dropdown.pack(side=tk.LEFT)
+
+
+exercise_frame = tk.Frame(window, bg=frame_bg) #here, the exercise preference frame and labels are created and packed 
+exercise_frame.pack(pady=10)
+exercise_label = tk.Label(exercise_frame, text="What is your exercise preference?", font=("Arial", 12), bg=frame_bg)
+exercise_label.pack(side=tk.LEFT, padx=10)
+exercise_var = tk.StringVar(window, value="Cardio")  # Add this line to define exercise_var
+
+window.mainloop()
