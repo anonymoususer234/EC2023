@@ -155,3 +155,28 @@ def on_submit():
 window = tk.Tk() #The main window is created, and its dimensions and title are set. 
 window.geometry("800x800")
 window.title("Health Advisor App")
+
+
+
+
+
+canvas = tk.Canvas(window) #scrollable frame 
+scrollbar = ttk.Scrollbar(window, orient="vertical", command=canvas.yview)
+scrollable_frame = ttk.Frame(canvas)
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+)
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw") #creates a new canvas by setting the coordinates and the anchor 
+canvas.configure(yscrollcommand=scrollbar.set)
+canvas.pack(side="left", fill="both", expand=True)
+scrollbar.pack(side="right", fill="y")
+style = ttk.Style() #creates a custom style for the scrollable frame
+style.configure("My.TFrame", background="white")
+
+
+frame_bg = "white" #set the color to white 
+scrollable_frame.configure(style="My.TFrame")
+window.configure(bg="lightgray") #configure the background to light gray 
