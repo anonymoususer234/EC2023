@@ -300,3 +300,61 @@ def generate_meal_plan(user_diet): #generate personalized meal plan
             breakfast = f"Smoothie with {ingredient}"
         else:
             snacks.append(ingredient) #if nothing, then there is an append to the snacks category 
+
+
+    if not breakfast: #fall back options when the user does not input anything (random choices)
+        breakfast_options = ["Oatmeal with mixed berries", "Avocado toast", "Yogurt with granola"]
+        breakfast = random.choice(breakfast_options)
+
+    if not lunch:
+        lunch_options = ["Grain bowl with roasted vegetables", "Caprese salad", "Vegetable wrap"]
+        lunch = random.choice(lunch_options)
+
+    if not dinner:
+        dinner_options = ["Pasta with marinara sauce", "Stir-fry tofu with rice and steamed vegetables", "Alfredo noodles that are high in protein"]
+        dinner = random.choice(dinner_options)
+
+
+    dessert_options = ["Chocolate cake", "Ice cream", "Fruit sorbet", "Cheesecake"] #random dessert since balance is important in a healthy diet 
+    dessert = random.choice(dessert_options)
+
+
+    meal_plan_label.configure( #the meal plan is configured and outputted using the f string format for ease 
+        text=f"Personalized Meal Plan:\n\n"
+             f"Breakfast: {breakfast}\n"
+             f"Lunch: {lunch}\n"
+             f"Dinner: {dinner}\n"
+             f"Snacks: {', '.join(snacks)}\n"
+             f"Dessert: {dessert}"
+    )
+
+meal_plan_label = tk.Label(window, text="Personalized Meal Planning", font=("Arial", 14), bg=frame_bg) #personalized meal plan section and label creation/packing
+meal_plan_label.pack(pady=10)
+
+
+calories_frame = tk.Frame(window, bg=frame_bg) #creating the user input entry widgets for personalized meal planning
+calories_frame.pack(pady=10)
+calories_label = tk.Label(calories_frame, text="Enter your daily calorie target:", font=("Arial", 12), bg=frame_bg)
+calories_label.pack(side=tk.LEFT, padx=10)
+calories_entry = tk.Entry(calories_frame, width=50, font=("Arial", 12))
+calories_entry.pack(side=tk.LEFT)
+
+ingredients_frame = tk.Frame(window, bg=frame_bg) #creating the ingrediants frame and text box entry where the user inputs their ingredients 
+ingredients_frame.pack(pady=10)
+ingredients_label = tk.Label(ingredients_frame, text="Enter ingredients you have (comma-separated):", font=("Arial", 12), bg=frame_bg)
+ingredients_label.pack(side=tk.LEFT, padx=10)
+ingredients_entry = tk.Entry(ingredients_frame, width=50, font=("Arial", 12))
+ingredients_entry.pack(side=tk.LEFT)
+
+generate_button = tk.Button(window, text="Generate Meal Plan", command=lambda: generate_meal_plan(diet_var.get()), font=("Arial", 12)) #this button generates the meal based on the inputs 
+generate_button.pack(pady=10)
+
+
+
+submit_button = tk.Button(window, text="Submit", command=on_submit, font=("Arial", 12)) #the submit button at the end (the generalized meal and exercise planning section)
+submit_button.pack(pady=10)
+
+
+
+#window.mainloop is called to run the entire code 
+window.mainloop()
