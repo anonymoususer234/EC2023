@@ -157,9 +157,6 @@ window.geometry("800x800")
 window.title("Health Advisor App")
 
 
-
-
-
 canvas = tk.Canvas(window) #scrollable frame 
 scrollbar = ttk.Scrollbar(window, orient="vertical", command=canvas.yview)
 scrollable_frame = ttk.Frame(canvas)
@@ -180,6 +177,7 @@ style.configure("My.TFrame", background="white")
 frame_bg = "white" #set the color to white 
 scrollable_frame.configure(style="My.TFrame")
 window.configure(bg="lightgray") #configure the background to light gray 
+
 
 #Here we create all the user input entry widgets 
 age_frame = tk.Frame(window, bg=frame_bg)
@@ -269,4 +267,36 @@ output_label.configure(background=frame_bg)
 
 
 
-window.mainloop()
+def generate_meal_plan(user_diet): #generate personalized meal plan 
+    user_calories = int(calories_entry.get()) #fetching user input and casting it to an int type 
+    user_ingredients = ingredients_entry.get().split(", ")
+
+    #the below will generate meal plan algorithm based on preferences and inputs
+    breakfast = ""
+    lunch = ""
+    dinner = ""
+    snacks = []
+    #popular ingredient types 
+    meat_items = ["beef", "chicken", "pork", "lamb", "turkey"]
+    vegetable_items = ["carrots", "broccoli", "spinach", "tomatoes", "peppers"]
+    fruit_items = ["apple", "banana", "orange", "grapes", "strawberries"]
+    for ingredient in user_ingredients: #processing the user input for ingredients by fetching 
+        ingredient_lower = ingredient.lower()
+
+        if ingredient_lower in meat_items: #if the ingrediant is a meat item and is vegan, it continues and randomly selects something vegan for them 
+            if user_diet == "Vegan":
+                continue
+            elif user_diet == "Vegetarian": #if the user is vegeterian but selected a meat item, then we would make their meal vegeterian (e.g. soy substitute)
+                lunch = f"Vegetarian curry with {ingredient}"
+                dinner = f"Vegetarian stir-fry with {ingredient}"
+            else:
+                lunch = f"Curry with {ingredient} and rice" #if they are non-veg, then they can hava regular meal 
+                dinner = f"Grilled {ingredient} with vegetables"
+        elif ingredient_lower in vegetable_items: #processes and outputs the food if they inputted a vegetable 
+            breakfast = f"Steamed {ingredient} with rice"
+            dinner = f"Stir-fried {ingredient} with soy sauce and rice"
+        elif ingredient_lower in fruit_items:
+            breakfast = f"Mixed fruit bowl with {ingredient}"
+            breakfast = f"Smoothie with {ingredient}"
+        else:
+            snacks.append(ingredient) #if nothing, then there is an append to the snacks category 
